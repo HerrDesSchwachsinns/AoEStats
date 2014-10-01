@@ -6,11 +6,10 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 
 import storage.DBStorage;
+import storage.Game;
 import storage.Storage;
 import storage.StorageException;
 
@@ -32,24 +31,24 @@ public class Convert {
 			System.out.println("usage: csvFile db user pswd");
 			System.exit(1);
 		}
+		Storage storage = new DBStorage(db, user, pswd);
+
 		System.out.println(" ---- start converting " + csvFile + " ----");
-		convert(csvFile);
+		convert(csvFile, storage);
 		System.out.println("finished.");
 		System.out.println(" ---- data in db ----");
 		read();
 	}
-	public static void convert(String inputCSV) throws IOException,
-			ParseException, StorageException {
+	public static void convert(String inputCSV, Storage storage)
+			throws IOException, ParseException, StorageException {
 
-		Storage storage = new DBStorage(db, user, pswd);
 		System.out.println(" ---- deleting old db ----");
 		storage.recreate();
 
 		Stats stats = new Stats(inputCSV);
-		DateFormat f = new SimpleDateFormat("dd.MM.yy");
-		for (Stats.Game g : stats.games()) {
+		for (Game g : stats.games()) {
 			System.out.println("writing " + g);
-			storage.insertGame(f.parse(g.date), g.winners, g.loosers);
+			storage.insertGame(g.date, g.winners, g.losers);
 		}
 	}
 	public static void read() throws SQLException {

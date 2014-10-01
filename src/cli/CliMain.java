@@ -17,6 +17,7 @@ import org.jfree.chart.ChartPanel;
 import org.jfree.ui.ApplicationFrame;
 
 import ratio.LRatio;
+import ratio.LongestLossSeries;
 import ratio.LongestWinSeries;
 import ratio.MovingAverage;
 import ratio.NotSoRandomWalk;
@@ -152,6 +153,9 @@ public class CliMain {
 			break;
 		case "longestwin":
 			ratio = new LongestWinSeries();
+			break;
+		case "longestloss":
+			ratio = new LongestLossSeries();
 			break;
 		default:
 			assert (false);

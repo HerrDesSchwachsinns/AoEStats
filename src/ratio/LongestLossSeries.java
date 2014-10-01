@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 
 import storage.Game;
 
-public class LongestWinSeries implements Ratio {
+public class LongestLossSeries implements Ratio {
 	@Override
 	public List<Rating> get(List<Game> games, List<String> players) {
 		Map<String, Integer> series = new HashMap<>();
@@ -15,13 +15,13 @@ public class LongestWinSeries implements Ratio {
 		Map<String, Integer> tempSeries = new HashMap<>();
 		players.forEach(p -> tempSeries.put(p, new Integer(0)));
 		for (Game g : games) {
-			for (String p : g.winners) {
+			for (String p : g.losers) {
 				if (!series.containsKey(p)) continue;
 				int newMax = tempSeries.get(p) + 1;
 				tempSeries.put(p, newMax);
 				if (series.get(p) < newMax) series.put(p, newMax);
 			}
-			for (String p : g.losers) {
+			for (String p : g.winners) {
 				if (!series.containsKey(p)) continue;
 				tempSeries.put(p, 0);
 			}

@@ -23,7 +23,7 @@ public class CliOptions extends Options {
 
 		addOption(OptionBuilder //
 				.withLongOpt("ratio") //
-				.withDescription("select ratio system. This is one of {simple, lratio, randomwalk, movingaverage, longestwin}")//
+				.withDescription("select ratio system. This is one of {simple, lratio, randomwalk, movingaverage, longestwin, longestloss}")//
 				.hasArg() //
 				.withArgName("SYSTEM") //
 				.withValueSeparator() //

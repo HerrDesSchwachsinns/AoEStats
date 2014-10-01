@@ -1,4 +1,3 @@
-import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -15,15 +14,7 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.jfree.chart.ChartMouseEvent;
-import org.jfree.chart.ChartMouseListener;
 import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.entity.ChartEntity;
-import org.jfree.chart.entity.LegendItemEntity;
-import org.jfree.chart.entity.TitleEntity;
-import org.jfree.chart.entity.XYItemEntity;
-import org.jfree.chart.plot.XYPlot;
 import org.jfree.ui.ApplicationFrame;
 
 import ratio.LRatio;
@@ -37,12 +28,18 @@ import storage.DBStorage;
 import storage.Game;
 import storage.Storage;
 import storage.StorageException;
-import chart.Charts;
+import chart.RatioChartPanel;
 
+/**
+ * This is a big fat mess and should be tidied up (more structure less
+ * spaghetti)
+ * 
+ * @author vogl
+ */
 public class Main {
 	public static void main(String[] args) {
-		//		args = new String[] { "-rlratio", "GrandJM", "Joe", "HDS", "Nesto",
-		//				"Alex", "Der Bayer" };
+		args = new String[] { "-c", "-rlratio", "GrandJM", "Joe", "HDS",
+				"Nesto", "Alex", "Der Bayer" };
 		Options options = createOptions();
 		try {
 			CommandLineParser parser = new GnuParser();
@@ -144,38 +141,12 @@ public class Main {
 		return options;
 	}
 	private static Frame createChartFrame(List<String> players, List<Game> games, Ratio ratio, boolean smooth) {
-		JFreeChart chart = Charts
-				.createRatioChart(games, players, ratio, smooth);
+		ChartPanel chartPanel = new RatioChartPanel(players, games, ratio,
+				smooth);
 		ApplicationFrame frame = new ApplicationFrame("Ratio Development");
-		ChartPanel chartPanel = new ChartPanel(chart);
-		chartPanel.setPreferredSize(new Dimension(1280, 720));
 		frame.setContentPane(chartPanel);
 		frame.pack();
 
-		chartPanel.addChartMouseListener(new ChartMouseListener() {
-
-			@Override
-			public void chartMouseMoved(ChartMouseEvent e) {}
-
-			@Override
-			public void chartMouseClicked(ChartMouseEvent e) {
-				ChartEntity entity = e.getEntity();
-				if (entity == null) return;
-				XYPlot plot = (XYPlot) e.getChart().getPlot();
-				int index;
-				if (entity instanceof XYItemEntity) {
-					index = ((XYItemEntity) entity).getSeriesIndex();
-					Charts.toggleSeriesSelectionState(plot.getRenderer(), index);
-				} else if (entity instanceof LegendItemEntity) {
-					index = plot
-							.getDataset()
-							.indexOf(((LegendItemEntity) entity).getSeriesKey());
-					Charts.toggleSeriesSelectionState(plot.getRenderer(), index);
-				} else if (entity instanceof TitleEntity) {
-					Charts.toggleUnselectedSeriesState(plot);
-				}
-			}
-		});
 		frame.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {

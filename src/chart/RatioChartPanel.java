@@ -30,6 +30,7 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
 import ratio.Ratio;
+import ratio.Ratios;
 import storage.Game;
 
 @SuppressWarnings("serial")
@@ -78,8 +79,8 @@ public class RatioChartPanel extends ChartPanel implements ChartMouseListener {
 
 	private static JFreeChart createChart(List<String> players, List<Game> games, Ratio ratio, boolean smooth) {
 		XYDataset dataset = createDataset(games, players, ratio);
-		final JFreeChart chart = ChartFactory.createXYLineChart(ratio
-				.getClass().getSimpleName() + " Developement", // chart title
+		final JFreeChart chart = ChartFactory.createXYLineChart(Ratios
+				.getLongName(ratio) + " Developement", // chart title
 				"Games", // x axis label
 				"Ratio", // y axis label
 				dataset, // data
@@ -96,7 +97,8 @@ public class RatioChartPanel extends ChartPanel implements ChartMouseListener {
 		else if (smooth) plot.setRenderer(new XYSplineRenderer());
 		plot.setBackgroundPaint(Color.white);
 		plot.setRangeGridlinePaint(Color.lightGray);
-		plot.addRangeMarker(new ValueMarker(1, Color.black, new BasicStroke(2f)));
+		plot.addRangeMarker(new ValueMarker(Ratios.getZeroMarkerValue(ratio),
+				Color.black, new BasicStroke(2f)));
 		plot.getDomainAxis(0)
 				.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
 

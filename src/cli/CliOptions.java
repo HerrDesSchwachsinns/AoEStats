@@ -4,6 +4,8 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 
+import ratio.Ratios;
+
 @SuppressWarnings("serial")
 public class CliOptions extends Options {
 	@SuppressWarnings("static-access")
@@ -23,7 +25,8 @@ public class CliOptions extends Options {
 
 		addOption(OptionBuilder //
 				.withLongOpt("ratio") //
-				.withDescription("select ratio system. This is one of {simple, lratio, randomwalk, movingaverage, longestwin, longestloss, winlossseries}")//
+				.withDescription("select ratio system. This is one of {"
+						+ String.join(", ", Ratios.getAllNames()) + "}")//
 				.hasArg() //
 				.withArgName("SYSTEM") //
 				.withValueSeparator() //

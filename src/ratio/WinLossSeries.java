@@ -1,6 +1,7 @@
 package ratio;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,13 +26,12 @@ public class WinLossSeries implements Ratio {
 		players.forEach(p -> history.put(p, new ArrayList<>()));
 		players.forEach(p -> history.get(p).add(0d));
 		for (Game g : games) {
-			for (String p : g.winners) {
-				if (players.contains(p))
-					appendIncrementOrSwitch(history.get(p), true);
-			}
-			for (String p : g.losers) {
-				if (players.contains(p))
-					appendIncrementOrSwitch(history.get(p), false);
+			for (String p : players) {
+				List<Double> playerHistory = history.get(p);
+				if (Arrays.asList(g.winners).contains(p)) appendIncrementOrSwitch(playerHistory, true);
+				else if (Arrays.asList(g.losers).contains(p)) appendIncrementOrSwitch(playerHistory, false);
+				else playerHistory
+						.add(playerHistory.get(playerHistory.size() - 1));
 			}
 		}
 		return history;

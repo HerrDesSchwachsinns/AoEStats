@@ -20,6 +20,5 @@ public interface Ratio {
 			}
 		}
 		return history;
-
 	}
 }

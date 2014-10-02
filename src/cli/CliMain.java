@@ -16,6 +16,7 @@ import org.apache.commons.cli.ParseException;
 import org.jfree.chart.ChartPanel;
 import org.jfree.ui.ApplicationFrame;
 
+import ratio.Ratios;
 import ratio.WinLossSeries;
 import ratio.LRatio;
 import ratio.LongestLossSeries;
@@ -33,7 +34,7 @@ import chart.RatioChartPanel;
 
 public class CliMain {
 	private static final String DEFAULT_MODE = "stats";
-	private static final String DEFAULT_RATIO = "lratio";
+	private static final Ratio DEFAULT_RATIO = new LRatio();
 	private static final String DEFAULT_BALANCER = "serpentine-twist";
 	private static final String DEFAULT_SERVER = "localhost/test";
 	private static final String DEFAULT_USER = "";
@@ -48,12 +49,12 @@ public class CliMain {
 				printHelp(options);
 				System.exit(0);
 			}
-			String mode = cmd.getOptionValue("mode");
-			if (mode == null) {
-				System.out.println("Note: unkown mode. using default mode");
-				mode = DEFAULT_MODE;
-			}
+			String mode;
+			if (!cmd.hasOption("mode")) mode = DEFAULT_MODE;
+			else mode = cmd.getOptionValue("mode");
 			switch (mode) {
+			default:
+				System.out.println("Note: unkown mode. using default mode");
 			case "stats":
 				statsMain(cmd);
 				break;
@@ -131,37 +132,13 @@ public class CliMain {
 				cmd.getOptionValue("paswd", DEFAULT_PSWD));
 	}
 	private static Ratio getRatio(CommandLine cmd) {
+		if (!cmd.hasOption("ratio")) return DEFAULT_RATIO;
 		String ratioSystem = cmd.getOptionValue("ratio");
-		if (ratioSystem == null) {
-			System.out
-					.println("Note: unkown ratio system. using default ratio");
-			ratioSystem = DEFAULT_RATIO;
-		}
-
-		Ratio ratio = null;
-		switch (ratioSystem) {
-		case "simple":
-			ratio = new SimpleRatio();
-			break;
-		case "lratio":
-			ratio = new LRatio();
-			break;
-		case "randomwalk":
-			ratio = new NotSoRandomWalk();
-			break;
-		case "movingaverage":
-			ratio = new MovingAverage(new LRatio());
-			break;
-		case "longestwin":
-			ratio = new LongestWinSeries();
-			break;
-		case "longestloss":
-			ratio = new LongestLossSeries();
-			break;
-		case "winlossseries":
-			ratio = new WinLossSeries();
-		default:
-			assert (false);
+		Ratio ratio = Ratios.getRatio(ratioSystem);
+		if (ratio == null) {
+			System.out.println("Note: unknown ratio system: " + ratioSystem
+					+ ". Using default");
+			ratio = DEFAULT_RATIO;
 		}
 		return ratio;
 	}

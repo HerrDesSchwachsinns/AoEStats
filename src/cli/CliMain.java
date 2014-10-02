@@ -16,6 +16,7 @@ import org.apache.commons.cli.ParseException;
 import org.jfree.chart.ChartPanel;
 import org.jfree.ui.ApplicationFrame;
 
+import ratio.WinLossSeries;
 import ratio.LRatio;
 import ratio.LongestLossSeries;
 import ratio.LongestWinSeries;
@@ -157,6 +158,8 @@ public class CliMain {
 		case "longestloss":
 			ratio = new LongestLossSeries();
 			break;
+		case "winlossseries":
+			ratio = new WinLossSeries();
 		default:
 			assert (false);
 		}
